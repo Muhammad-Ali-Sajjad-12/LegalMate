@@ -41,6 +41,28 @@ public:
         clear();
     }
 
+    // Copy Constructor (Deep Copy - prevents double-free crashes)
+    LinkedList(const LinkedList<T>& other) : head(nullptr), tail(nullptr), count(0) {
+        ListNode<T>* current = other.head;
+        while (current != nullptr) {
+            pushBack(current->data);
+            current = current->next;
+        }
+    }
+
+    // Assignment Operator (Deep Copy)
+    LinkedList<T>& operator=(const LinkedList<T>& other) {
+        if (this != &other) {
+            clear();
+            ListNode<T>* current = other.head;
+            while (current != nullptr) {
+                pushBack(current->data);
+                current = current->next;
+            }
+        }
+        return *this;
+    }
+
     // Adds a value at the end of the list
     void pushBack(const T& value) {
         ListNode<T>* newNode = new ListNode<T>(value);
