@@ -188,6 +188,4 @@ public:
         tail = nullptr;
         count = 0;
     }
-
-    // the next functions go here
 };
