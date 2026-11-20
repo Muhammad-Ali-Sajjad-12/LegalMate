@@ -101,10 +101,27 @@ private:
         return root;
     }
 
+    // Deletes every node children first then the node itself (post-order)
+    void destroy_tree(BSTNode* node)
+    {
+        if (node == nullptr)
+            return;
+
+        destroy_tree(node->left);
+        destroy_tree(node->right);
+        delete node;
+    }
+
 public:
     BinarySearchTree()
     {
         root = nullptr;
+    }
+
+    // frees all nodes when the tree goes out of scope
+    ~BinarySearchTree()
+    {
+        destroy_tree(root);
     }
 
     void insert(Document d)

@@ -219,10 +219,27 @@ private:
         inorder(root->right);
     }
 
+    // Deletes every node children first then the node itself (post-order)
+    void destroy_tree(AVLNode* node)
+    {
+        if (node == nullptr)
+            return;
+
+        destroy_tree(node->left);
+        destroy_tree(node->right);
+        delete node;
+    }
+
 public:
     AVLTree()
     {
         root = nullptr;
+    }
+
+    // frees all nodes when the tree goes out of scope
+    ~AVLTree()
+    {
+        destroy_tree(root);
     }
 
     void insert(Document d)

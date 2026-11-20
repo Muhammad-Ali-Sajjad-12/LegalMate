@@ -45,4 +45,69 @@ inline void indexDocument(const Document& doc, HashTable& index) {
     }
 }
 
-// the next functions go here
+// Sorts results from highest to lowest score using bubble sort.
+// Equal scores are ordered by document ID so the output is always the same.
+inline void sortByScore(LinkedList<SearchResult>& results) {
+    bool swapped = true;
+
+    while (swapped) {
+        swapped = false;
+        ListNode<SearchResult>* current = results.getHead();
+
+        while (current != nullptr && current->next != nullptr) {
+            SearchResult& first = current->data;
+            SearchResult& second = current->next->data;
+
+            bool outOfOrder = (second.score > first.score) ||
+                              (second.score == first.score && second.docId < first.docId);
+
+            if (outOfOrder) {
+                SearchResult temp = first;
+                first = second;
+                second = temp;
+                swapped = true;
+            }
+            current = current->next;
+        }
+    }
+}
+
+// Finds documents matching the query and gives each a relevance score:
+// +3 for every keyword that is one of its tags, +1 if it only appears in the text
+inline LinkedList<SearchResult> searchKeywords(const std::string& query,HashTable& index,AVLTree& documents) {
+    LinkedList<SearchResult> results;
+    LinkedList<std::string> keywords = tokenize(query);
+
+    ListNode<std::string>* word = keywords.getHead();
+    while (word != nullptr) {
+        const LinkedList<int>* ids = index.searchWord(word->data);
+
+        if (ids != nullptr) {
+            ListNode<int>* idNode = ids->getHead();
+
+            while (idNode != nullptr) {
+                Document* doc = documents.search(idNode->data);
+
+                if (doc != nullptr) {
+                    int points = doc->hasTag(word->data) ? 3 : 1;
+
+                    SearchResult key;
+                    key.docId = doc->id;
+                    key.score = points;
+
+                    SearchResult* existing = results.find(key);
+                    if (existing == nullptr) {
+                        results.pushBack(key);          // first match for this document
+                    } else {
+                        existing->score += points;      // add to its running score
+                    }
+                }
+                idNode = idNode->next;
+            }
+        }
+        word = word->next;
+    }
+
+    sortByScore(results);
+    return results;
+}
