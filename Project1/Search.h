@@ -6,16 +6,13 @@
 #include "LinkedList.h"
 #include "TextUtils.h"
 
-// Search.h
-// Author: Muhammad Ali Sajjad
-//
-// Keyword search for LegalMate.
-// - indexDocument: adds a document's words to the hash table
-// - searchKeywords: finds matching documents and scores them
-//   (+3 if a keyword is one of the document's tags, +1 if it only
-//   appears in the title or text), best match first.
-// - The AVL tree is the main store: results keep only document IDs,
-//   and the full document is fetched from the tree when needed.
+// search.h - by sajjad
+// keyword search for legalmate
+// indexDocument puts a docs words into the hash table
+// searchKeywords finds matching docs and scores them
+// +3 if keyword is one of the docs tags, +1 if its only in title or text
+// results are sorted best first
+// avl tree is the main store, results only keep doc ids
 
 // One search hit: which document, and how relevant it is
 struct SearchResult {

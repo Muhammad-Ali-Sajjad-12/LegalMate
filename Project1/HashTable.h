@@ -2,15 +2,10 @@
 #include <string>
 #include "LinkedList.h"
 
-// HashTable.h
-// Author: Muhammad Ali Sajjad
-//
-// Keyword index for LegalMate: maps each keyword to the IDs of the
-// documents that contain it for example "rent" -> 3, 7, 12
-//
-// - Collisions are handled by chaining: each bucket is a linked list
-//   so two words that land in the same bucket simply share that list.
-// - Average lookup is O(1).
+// hashtable.h - by sajjad
+// keyword index, maps each keyword to the doc ids that have it like "rent" -> 3, 7, 12
+// collisions handled by chaining, each bucket is a linked list
+// average lookup is O(1)
 
 // One keyword and the IDs of the documents that contain it
 struct WordEntry {

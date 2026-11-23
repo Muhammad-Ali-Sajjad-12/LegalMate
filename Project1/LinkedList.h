@@ -1,19 +1,10 @@
-//DOCUMENTATION
-// LinkedList.h
-// Author: Muhammad Ali Sajjad
-//
-// Generic singly linked list used across LegalMate for document IDs
-// (hash table), keywords (tokenizer) and edges (graph).
-//
-// - Template: one class works for any type, so all code stays in this header.
-// - Keeps head and tail, so pushBack and pushFront are O(1).
-//   Search and remove are O(n).
-// - The list owns its nodes: they are created with new and freed in clear()
-//   and the destructor.
-// - Uses std:: instead of "using namespace std;" because a header is copied
-//   into every file that includes it, which can cause name clashes
-//   (e.g. our find/remove/count vs std::find/std::remove/std::count)
-//   std has built-in functions as remove, count, etc
+// linkedlist.h - by sajjad
+// generic singly linked list, used for doc ids in hash table, keywords and graph edges
+// its a template so it works with any type, thats why all code is in the header
+// we keep head and tail so pushBack and pushFront are O(1), search and remove are O(n)
+// list owns its nodes, made with new and freed in clear() and destructor
+// using std:: instead of using namespace std because a header gets copied into every file
+// that includes it, so it can cause name clashes like our find/remove vs std::find/std::remove
 
 #pragma once
 #include <iostream>

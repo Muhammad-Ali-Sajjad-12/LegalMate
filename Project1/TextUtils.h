@@ -2,15 +2,11 @@
 #include <string>
 #include "LinkedList.h"
 
-// TextUtils.h
-// Author: Muhammad Ali Sajjad
-//
-// Text helpers for LegalMate: lowercase conversion, stop-word check and
-// tokenizer. The tokenizer turns a sentence into keywords for the hash table.
-//
-// - Header-only, like the rest of the project. Functions are marked inline
-//   so this file can be included in several .cpp files without
-//   "multiple definition" errors.
+// textutils.h - by sajjad
+// text helpers: lowercase, stop word check and tokenizer
+// tokenizer turns a sentence into keywords for the hash table
+// functions are inline so this header can be included in many cpp files
+// without getting multiple definition errors
 
 // Converts every capital letter to lowercase: "Tenant RENT" -> "tenant rent"
 inline std::string toLowerCase(const std::string& text) {
