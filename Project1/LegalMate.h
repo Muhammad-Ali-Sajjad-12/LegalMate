@@ -10,6 +10,8 @@
 #include "Search.h"
 #include "FileManager.h"
 #include "LinkedList.h"
+#include "Graph.h"
+#include "TextUtils.h"
 
 // legalmate.h - by sajjad
 // main class that connects every data structure
@@ -17,7 +19,7 @@
 // when a doc is added or deleted this class updates all structures together
 // so they never go out of sync
 // avl tree is the main store, others keep ids or copies for their own job
-// graph (ahmad) will be added here once its pushed
+// graph (ahmad) links docs that share tags used for recommendations
 
 class LegalMate {
 private:
@@ -25,6 +27,7 @@ private:
     BinarySearchTree titles;    // docs sorted by title for a-z list
     HashTable keywordIndex;     // keyword -> doc ids
     CategoryIndex categories;   // category -> doc ids
+    Graph relations;            // links docs that share tags, for recommendations
     LinkedList<int> allIds;     // every doc id in the order added, used for saving
     FileManager files;          // loads and saves the csv file
     std::string dataFile;       // path of the csv file
@@ -39,15 +42,22 @@ public:
             return false;
         }
 
-        documents.insert(doc);                          // avl, main store
-        titles.insert(doc);                             // bst, for a-z list
-        indexDocument(doc, keywordIndex);               // hash table, for search
-        categories.addDocument(doc.category, doc.id);   // category list
-        allIds.pushBack(doc.id);                        // for saving later
+        // copy the doc with every tag in lowercase so "Tenant" and "tenant" match
+        Document clean = doc;
+        for (size_t i = 0; i < clean.tags.size(); i++) {
+            clean.tags[i] = toLowerCase(clean.tags[i]);
+        }
+
+        documents.insert(clean);                            // avl, main store
+        titles.insert(clean);                               // bst, for a-z list
+        indexDocument(clean, keywordIndex);                 // hash table, for search
+        categories.addDocument(clean.category, clean.id);   // category list
+        relations.addDocument(clean);                       // graph, for recommendations
+        allIds.pushBack(clean.id);                          // for saving later
         return true;
     }
 
-        // reads the csv using ahmads filemanager and adds every doc
+    // reads the csv using ahmads filemanager and adds every doc
     // returns how many docs were actually added
     int loadData() {
         std::vector<Document> loaded = files.loadDocuments(dataFile);
@@ -97,6 +107,7 @@ public:
         keywordIndex.removeDocument(id);
         categories.removeDocument(category, id);
         titles.remove(title);
+        relations.removeDocument(id);
         documents.remove(id);   // avl last, we needed the doc above
         allIds.remove(id);
         return true;
@@ -132,5 +143,12 @@ public:
         return keywordIndex.getWordCount();
     }
 
-    // recommend function goes here once ahmads graph is pushed
+    // related docs from the graph, direct neighbours first then 2 steps away
+    LinkedList<Recommendation> recommend(int id) {
+        return relations.recommend(id, 2);
+    }
+
+    int linkCount() const {
+        return relations.edgeCount();
+    }
 };
