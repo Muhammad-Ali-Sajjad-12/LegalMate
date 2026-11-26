@@ -266,6 +266,11 @@ public:
     {
         return root;
     }
+
+    int treeHeight()
+    {
+        return getHeight(root);
+    }
 };
 
 #endif

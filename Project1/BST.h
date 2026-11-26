@@ -61,6 +61,16 @@ private:
         inorder(root->right);
     }
 
+    // Collects all documents in A-Z order for UI display
+    void collectInorder(BSTNode* node, vector<Document>& result)
+    {
+        if (node == nullptr)
+            return;
+        collectInorder(node->left, result);
+        result.push_back(node->d);
+        collectInorder(node->right, result);
+    }
+
     BSTNode* inorder_successor(BSTNode* node)
     {
         BSTNode* current = node;
@@ -145,6 +155,13 @@ public:
     void inorder()
     {
         inorder(root);
+    }
+
+    vector<Document> getAllSorted()
+    {
+        vector<Document> result;
+        collectInorder(root, result);
+        return result;
     }
 
     BSTNode* getRoot()

@@ -135,6 +135,15 @@ public:
         titles.inorder();
     }
 
+    // returns all documents sorted A-Z by title (for Qt UI)
+    std::vector<Document> getTitlesSorted() {
+        return titles.getAllSorted();
+    }
+
+    int avlHeight() {
+        return documents.treeHeight();
+    }
+
     int documentCount() const {
         return allIds.size();
     }
